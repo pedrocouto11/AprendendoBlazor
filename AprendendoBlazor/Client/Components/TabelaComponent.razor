@@ -1,0 +1,113 @@
+﻿
+<h3>Lista de @objeto</h3>
+<p>Este é o componente lista de usuários...</p>
+@*<p>A check box do @Items[0].Nome esta: @Items[0].Checked</p>
+<p>A check box do @Items[1].Nome esta: @Items[1].Checked</p>*@
+
+@typeparam TItem
+
+<button type="button" class="btn btn-primary" @onclick="@(() => NovoUsuario.InvokeAsync(true))">Novo</button>  
+
+<button type="button" class="btn btn-primary" @onclick="ImprimeItems">Deletar</button>
+<br />
+
+@if (Items != null && Items.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                @foreach (var member in memberInfo)
+                {
+                    @if (member.MemberType == MemberTypes.Property &&
+                     !ColunasParaExcluirCSV.Contains(member.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <th>
+                            @member.Name
+                        </th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Items)
+            {
+                @*<tr>@LinhaTabelaComponent(item)</tr>*@
+                @if (item != null)
+                {
+
+                    <tr>
+                        @*<LinhaTabelaComponent Usuario="item" ColunasParaExcluirCSV=@ColunasParaExcluirCSV AtualizaUsuario="AtualizaUsuario"></LinhaTabelaComponent>*@
+                        <td>
+                            <div class="form-group mx-sm-3 mb-2">
+
+                                <input type="checkbox" class="form-check-input" id="checked" @bind="item.Checked" />
+
+                            </div>
+                        </td>
+                        @foreach (var member in memberInfo)
+                        {
+                            @if (member.MemberType == MemberTypes.Property &&
+                                    !ColunasParaExcluirCSV.Contains(member.Name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                <td>
+                                    @item.GetType().GetProperty(member.Name).GetValue(item).ToString();
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Parameter]
+    public string objeto { get; set; }
+
+
+    [Parameter]
+    public List<Usuario> Items { get; set; } // DUVIDA - como usar o tipo generico de dado T.
+
+    [Parameter]
+    public string ColunasParaExcluirCSV { get; set; }
+
+    [Parameter]
+    public EventCallback<List<Usuario>> DeletaUsuario { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> NovoUsuario { get; set; }
+
+    MemberInfo[] memberInfo;
+
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Items != null && Items.Count > 0)
+        {
+            Type typeofItem = this.Items[0].GetType();
+            memberInfo = typeofItem.GetMembers();
+        }
+    }
+
+    private void ImprimeItems()
+    {
+        foreach(Usuario item in Items)
+        {
+
+            Console.WriteLine("ID do {0}: {1} e esta com o checked: {2}", item.Nome, item.Id, item.Checked);
+
+        }
+        Console.WriteLine("Neste ponto a quantidade de itens na lista Items e: {0}", Items.Count);
+        DeletaUsuario.InvokeAsync(Items);
+    }
+
+
+
+
+}

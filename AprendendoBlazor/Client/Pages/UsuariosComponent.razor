@@ -1,0 +1,115 @@
+﻿@page "/usuarios"
+
+@inject HttpClient client
+
+<h3>Usuários</h3>
+<p>Este é o componenete de usuários</p>
+<br />
+
+@if (Usuarios != null)
+{
+    <TabelaComponent objeto="Usuários" Items=@Usuarios TItem=@Usuario ColunasParaExcluirCSV="" NovoUsuario="CriarUsuario" DeletaUsuario="DeletaUsuario"></TabelaComponent>
+}
+
+@if (CriarNovoUsuario)
+{
+    <NovoUsuarioForm  Salvar="SalvarNovoUsuario" Cancelar="CancelaNovoUsuario"></NovoUsuarioForm>
+}
+
+@code {
+
+    HttpClient http = new HttpClient();
+
+    Usuario novoUsuario = new Usuario();
+
+    public List<Usuario> Usuarios = new List<Usuario>();
+
+    private bool CriarNovoUsuario;
+
+
+
+    private void CriarUsuario()
+    {
+        CriarNovoUsuario = true;
+    }
+
+
+
+    protected async override void OnInitialized()
+    {
+        http.BaseAddress = client.BaseAddress;
+        Usuarios = await http.GetFromJsonAsync<List<Usuario>>("api/Usuarios/BuscaUsuarios");
+        StateHasChanged();
+
+        base.OnInitialized();
+    }
+
+
+    private async void SalvarNovoUsuario(Usuario novoUsuario)
+    {
+        Usuario P1 = new Usuario()
+        {
+            Nome = novoUsuario.Nome,
+            Checked = novoUsuario.Checked,
+            Email = novoUsuario.Email,
+            DataNascimento = novoUsuario.DataNascimento,
+            //Id = Usuarios.Count + 1 // GAMBIARRA - vai dar erro quando um usuario for excluido e outro criado
+        };
+
+
+        var x = await http.PostAsJsonAsync<Usuario>("api/Usuarios/AdicionaUsuario", P1);
+
+        if (x.IsSuccessStatusCode)
+        {
+            var result = await x.Content.ReadAsStringAsync();
+            Console.WriteLine("resposta obtida do httppost: {0}", result);
+
+            P1.Id = int.Parse(result);
+
+            Usuarios.Add(P1);
+
+        }
+        CriarNovoUsuario = false;
+        StateHasChanged();
+
+    }
+
+
+    private void CancelaNovoUsuario()
+    {
+        CriarNovoUsuario = false;
+    }
+
+    private async void DeletaUsuario(List<Usuario> usuarios)
+    {
+        if(usuarios.Count == 0)
+        {
+            Console.WriteLine("Lista passada pelo callback esta vazia");
+            return;
+        }
+
+        foreach(var item in usuarios.ToList())
+        {
+
+            if(item.Checked == true)
+            {
+                Console.WriteLine("encontrou um usuario para ser excluido com Id: {0}", item.Id);
+                var x = await http.PostAsJsonAsync<Usuario>("api/Usuarios/ExcluiUsuario", item);
+                if (x.IsSuccessStatusCode)
+                {
+
+                    Usuarios.RemoveAll(u => u.Id == item.Id);
+                }
+                StateHasChanged();
+
+            }
+
+        }
+
+    }
+
+
+
+
+
+}

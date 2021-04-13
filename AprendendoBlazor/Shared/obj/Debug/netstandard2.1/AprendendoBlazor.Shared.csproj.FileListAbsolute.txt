@@ -1,0 +1,9 @@
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\bin\Debug\netstandard2.1\AprendendoBlazor.Shared.deps.json
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\bin\Debug\netstandard2.1\AprendendoBlazor.Shared.dll
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\bin\Debug\netstandard2.1\AprendendoBlazor.Shared.pdb
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\obj\Debug\netstandard2.1\AprendendoBlazor.Shared.csprojAssemblyReference.cache
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\obj\Debug\netstandard2.1\AprendendoBlazor.Shared.AssemblyInfoInputs.cache
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\obj\Debug\netstandard2.1\AprendendoBlazor.Shared.AssemblyInfo.cs
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\obj\Debug\netstandard2.1\AprendendoBlazor.Shared.csproj.CoreCompileInputs.cache
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\obj\Debug\netstandard2.1\AprendendoBlazor.Shared.dll
+C:\Projetos\AprendendoBlazor\AprendendoBlazor\Shared\obj\Debug\netstandard2.1\AprendendoBlazor.Shared.pdb

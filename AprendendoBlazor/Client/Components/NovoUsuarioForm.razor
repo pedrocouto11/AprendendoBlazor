@@ -1,0 +1,49 @@
+﻿<h3>Novo Usuario</h3>
+
+
+<EditForm Model="Usuario" OnValidSubmit="@(() => Salvar.InvokeAsync(Usuario))">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+    <div class="form-group">
+        <label for="Nome">Nome</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Usuario.Nome" />
+            <ValidationMessage For="@(() => Usuario.Nome)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Nome">Nome</label>
+        <div>
+            <InputDate class="form-control" @bind-Value="@Usuario.DataNascimento" />
+            <ValidationMessage For="@(() => Usuario.DataNascimento)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Email">E-mail</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Usuario.Email" />
+            <ValidationMessage For="@(() => Usuario.Email)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <button type="button" class="btn btn-dark" @onclick="@(() => Cancelar.InvokeAsync(false))">Cancelar</button>
+
+</EditForm>
+
+@code {
+    //[Parameter]
+    //public Usuario Usuario { get; set; }
+
+    Usuario Usuario = new Usuario();
+
+    [Parameter]
+    public EventCallback<Usuario> Salvar { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> Cancelar { get; set; }
+
+}

@@ -1,0 +1,53 @@
+﻿
+
+
+<div class="form-group mx-sm-3 mb-2">
+    <td>
+        <input type="checkbox" class="form-check-input" id="checked" @bind="Usuario.Checked" @onclick="@(() => AtualizaUsuario.InvokeAsync(Usuario))" />
+    </td>
+</div>
+@foreach(var member in memberInfo)
+{
+    @if (member.MemberType == MemberTypes.Property &&
+                !ColunasParaExcluirCSV.Contains(member.Name, StringComparison.OrdinalIgnoreCase))
+    {
+        <td>
+            @Usuario.GetType().GetProperty(member.Name).GetValue(Usuario).ToString();
+        </td>
+    }
+}
+<br />
+
+
+@code {
+
+    [Parameter]
+    public Usuario Usuario { get; set; }
+
+    [Parameter]
+    public string ColunasParaExcluirCSV { get; set; }
+
+    MemberInfo[] memberInfo;
+
+    [Parameter]
+    public EventCallback<Usuario> AtualizaUsuario { get; set; }
+
+    private void ChamaCallback()
+    {
+        Console.WriteLine($"Chamando callback passando o usuario: {0}", Usuario.Nome);
+        AtualizaUsuario.InvokeAsync(Usuario);
+
+    }
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Usuario != null)
+        {
+            Type typeofItem = Usuario.GetType();
+            memberInfo = typeofItem.GetMembers();
+        }
+    }
+
+}
